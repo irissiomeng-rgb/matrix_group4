@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNSTOPPABLE | 教學展示頁</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛑</text></svg>">
+  <meta
+    name="description"
+    content="UNSTOPPABLE 教學展示頁，一刻不停，創意不斷，使用固定案例示範各種圖像處理技術的前後對比效果。"
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,500,1,0">
+  <link rel="stylesheet" href="./liquid-glass.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        packages: {'[+]': ['ams']}
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      },
+      startup: {
+        ready: function() {
+          MathJax.startup.defaultReady();
+          MathJax.startup.promise.then(function() {
+            console.log('MathJax is ready');
+          });
+        }
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="tutorial-page">
+  <div class="bg-layer" aria-hidden="true">
+    <span class="bg-wash bg-wash-a"></span>
+    <span class="bg-wash bg-wash-b"></span>
+    <span class="bg-wash bg-wash-c"></span>
+    <span class="orb orb-a"></span>
+    <span class="orb orb-b"></span>
+    <span class="orb orb-c"></span>
+    <span class="orb orb-d"></span>
+    <span class="bubble bubble-a"></span>
+    <span class="bubble bubble-b"></span>
+    <span class="bubble bubble-c"></span>
+  </div>
+
+  <div class="page-shell">
+    <header class="topbar glass-panel">
+      <div class="brand">
+        <img src="logo.png" alt="UNSTOPPABLE Logo" class="brand-logo">
+        <div class="brand-copy">
+          <h1>UNSTOPPABLE</h1>
+          <p>一刻不停，創意不斷</p>
+        </div>
+      </div>
+
+      <nav class="nav-pill" aria-label="頁面導覽">
+        <a class="nav-item" href="./index.html">
+          <span class="material-symbols-rounded" aria-hidden="true">home</span>
+          <span>首頁</span>
+        </a>
+        <a class="nav-item active" href="./tutorial.html" aria-current="page">
+          <span class="material-symbols-rounded" aria-hidden="true">auto_stories</span>
+          <span>教學展示</span>
+        </a>
+      </nav>
+    </header>
+
+    <main class="showcase-main">
+      <section class="showcase-page glass-panel">
+        <div class="section-intro showcase-header">
+          <div>
+            <p class="showcase-kicker">教學展示頁</p>
+            <h2>固定案例前後對比與放大檢視</h2>
+            <p>
+              這個頁面會用固定參數與固定案例，示範不同影像處理主題的效果差異。
+              你可以先看同框對比，再進入 lightbox 以更大的視窗檢視細節。
+            </p>
+          </div>
+
+          <div class="showcase-nav glass-subpanel" aria-label="展示頁摘要">
+            <span class="showcase-nav__label">展示模式</span>
+            <div class="showcase-nav__meta">
+              <span class="showcase-badge">固定案例</span>
+              <span class="showcase-badge">同框前後對比</span>
+              <span class="showcase-badge">可放大檢視</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="showcase-layout">
+          <aside class="showcase-topic-list glass-subpanel" aria-label="展示主題">
+            <button class="showcase-topic-card active" data-showcase-topic="brightness-contrast" type="button">
+              <span class="material-symbols-rounded" aria-hidden="true">tune</span>
+              <div class="showcase-topic-card__copy">
+                <strong>亮度 / 對比</strong>
+                <span>用固定 b / c 參數展示明暗與層次變化。</span>
+              </div>
+            </button>
+
+            <button class="showcase-topic-card" data-showcase-topic="blend" type="button">
+              <span class="material-symbols-rounded" aria-hidden="true">blur_on</span>
+              <div class="showcase-topic-card__copy">
+                <strong>影像混合</strong>
+                <span>觀察 alpha 權重如何影響兩張影像的合成結果。</span>
+              </div>
+            </button>
+
+            <button class="showcase-topic-card" data-showcase-topic="mosaic" type="button">
+              <span class="material-symbols-rounded" aria-hidden="true">grid_view</span>
+              <div class="showcase-topic-card__copy">
+                <strong>馬賽克</strong>
+                <span>比較 block 大小改變後的畫面細節保留程度。</span>
+              </div>
+            </button>
+
+            <button class="showcase-topic-card" data-showcase-topic="fft" type="button">
+              <span class="material-symbols-rounded" aria-hidden="true">multiline_chart</span>
+              <div class="showcase-topic-card__copy">
+                <strong>FFT</strong>
+                <span>觀察頻域頻譜、低通與高通濾波的差異。</span>
+              </div>
+            </button>
+
+            <button class="showcase-topic-card" data-showcase-topic="pca" type="button">
+              <span class="material-symbols-rounded" aria-hidden="true">data_object</span>
+              <div class="showcase-topic-card__copy">
+                <strong>PCA</strong>
+                <span>以固定保留率對比主成分重建品質。</span>
+              </div>
+            </button>
+
+            <button class="showcase-topic-card" data-showcase-topic="spatial-filter" type="button">
+              <span class="material-symbols-rounded" aria-hidden="true">filter_hdr</span>
+              <div class="showcase-topic-card__copy">
+                <strong>空間濾鏡</strong>
+                <span>比較平滑、銳化與邊緣強化的效果。</span>
+              </div>
+            </button>
+
+            <button class="showcase-topic-card" data-showcase-topic="canny" type="button">
+              <span class="material-symbols-rounded" aria-hidden="true">polyline</span>
+              <div class="showcase-topic-card__copy">
+                <strong>Canny 邊緣偵測</strong>
+                <span>展示 blur 與雙閾值組合對輪廓輸出的影響。</span>
+              </div>
+            </button>
+
+            <button class="showcase-topic-card" data-showcase-topic="lsb" type="button">
+              <span class="material-symbols-rounded" aria-hidden="true">lock</span>
+              <div class="showcase-topic-card__copy">
+                <strong>LSB 隱寫術</strong>
+                <span>在像素裡藏『秘密小紙條』的原理與破壞效果。</span>
+              </div>
+            </button>
+          </aside>
+
+          <section id="showcaseContent" class="showcase-content glass-subpanel" aria-live="polite">
+            <div class="showcase-empty">
+              <p class="showcase-empty__eyebrow">準備中</p>
+              <h3>正在建立展示案例</h3>
+              <p>系統會載入固定示範影像，並為各主題建立前後對比的固定案例。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-foot">
+      UNSTOPPABLE・一刻不停，創意不斷的圖像矩陣實驗室。
+    </footer>
+  </div>
+
+  <div
+    id="showcaseLightbox"
+    class="showcase-lightbox"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="showcaseLightboxTitle"
+  >
+    <div class="showcase-lightbox__backdrop" data-showcase-lightbox-close="true"></div>
+    <div class="showcase-lightbox__dialog glass-panel" role="document">
+      <div class="showcase-lightbox__header">
+        <div class="showcase-lightbox__meta">
+          <p class="showcase-empty__eyebrow">放大檢視</p>
+          <h3 id="showcaseLightboxTitle">展示案例</h3>
+          <p id="showcaseLightboxDescription">保留同框前後對比，方便在大視窗中檢查局部細節。</p>
+        </div>
+
+        <button
+          id="showcaseLightboxClose"
+          class="showcase-lightbox__close"
+          type="button"
+          aria-label="關閉展示檢視"
+          data-showcase-lightbox-close="true"
+        >
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+      </div>
+
+      <div id="showcaseLightboxToolbar" class="showcase-lightbox__toolbar" aria-label="縮放控制">
+        <button id="showcaseLightboxFitBtn" class="showcase-lightbox__zoom-btn" type="button">適應視窗</button>
+        <button id="showcaseLightboxZoom100Btn" class="showcase-lightbox__zoom-btn" type="button">100%</button>
+        <button id="showcaseLightboxZoom200Btn" class="showcase-lightbox__zoom-btn" type="button">200%</button>
+        <button id="showcaseLightboxResetBtn" class="showcase-lightbox__zoom-btn" type="button">重設檢視</button>
+        <output id="showcaseLightboxZoomValue" class="showcase-lightbox__zoom-readout" for="showcaseLightboxFitBtn showcaseLightboxZoom100Btn showcaseLightboxZoom200Btn showcaseLightboxResetBtn" aria-live="polite">FIT</output>
+      </div>
+
+      <div id="showcaseLightboxBadgeRow" class="showcase-lightbox__badge-row" aria-live="polite" hidden></div>
+
+      <div id="showcaseLightboxViewport" class="showcase-lightbox__viewport">
+        <div id="showcaseLightboxCompare" class="showcase-lightbox__compare">
+          <div id="showcaseLightboxZoomLayer" class="showcase-lightbox__zoom-layer">
+            <div id="showcaseLightboxSplit" class="showcase-lightbox__split">
+              <section
+                id="showcaseLightboxPaneBefore"
+                class="showcase-lightbox__pane showcase-lightbox__pane--before"
+                aria-label="Before 圖像"
+              >
+                <span id="showcaseLightboxBeforeLabel" class="showcase-lightbox__label showcase-lightbox__label--before">
+                  <small>BEFORE</small>
+                  <strong>原圖</strong>
+                </span>
+                <canvas id="showcaseLightboxBeforeCanvas" class="showcase-lightbox__pane-canvas" aria-hidden="true"></canvas>
+              </section>
+
+              <section
+                id="showcaseLightboxPaneAfter"
+                class="showcase-lightbox__pane showcase-lightbox__pane--after"
+                aria-label="After 圖像"
+              >
+                <span id="showcaseLightboxAfterLabel" class="showcase-lightbox__label showcase-lightbox__label--after">
+                  <small>AFTER</small>
+                  <strong>效果圖</strong>
+                </span>
+                <canvas id="showcaseLightboxAfterCanvas" class="showcase-lightbox__pane-canvas" aria-hidden="true"></canvas>
+              </section>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./fuji-demo-data.js"></script>
+  <script src="./tutorial-showcase.js"></script>
+  <script>
+    document.querySelectorAll('.brand-logo').forEach(img => {
+      let pressTimer;
+      let pressed = false;
+
+      img.addEventListener('contextmenu', e => e.preventDefault());
+
+      function startPress() {
+        pressed = false;
+        pressTimer = setTimeout(() => {
+          pressed = true;
+          let overlay = document.querySelector('.logo-overlay');
+          if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'logo-overlay';
+            document.body.appendChild(overlay);
+            overlay.addEventListener('click', closeZoom);
+          }
+          img.classList.add('zoomed');
+        }, 500);
+      }
+
+      function endPress() {
+        clearTimeout(pressTimer);
+        if (!pressed) {
+          location.reload();
+        }
+      }
+
+      function closeZoom() {
+        img.classList.remove('zoomed');
+        const overlay = document.querySelector('.logo-overlay');
+        if (overlay) overlay.remove();
+      }
+
+      // Mouse events
+      img.addEventListener('mousedown', startPress);
+      img.addEventListener('mouseup', endPress);
+      img.addEventListener('mouseleave', () => clearTimeout(pressTimer));
+
+      // Touch events for mobile
+      img.addEventListener('touchstart', e => {
+        e.preventDefault();
+        startPress();
+      }, { passive: false });
+      img.addEventListener('touchend', endPress);
+      img.addEventListener('touchcancel', () => clearTimeout(pressTimer));
+    });
+  </script>
+</body>
+</html>
