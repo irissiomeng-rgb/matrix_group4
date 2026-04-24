@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNSTOPPABLE</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛑</text></svg>">
+  <meta name="description" content="UNSTOPPABLE：一刻不停，創意不斷的圖像矩陣操作實驗室。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,500,1,0">
+  <link rel="stylesheet" href="./liquid-glass.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        packages: {'[+]': ['ams']}
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      },
+      startup: {
+        ready: function() {
+          MathJax.startup.defaultReady();
+          MathJax.startup.promise.then(function() {
+            console.log('MathJax is ready');
+          });
+        }
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gpu.js@latest/dist/gpu.min.js"></script>
+</head>
+<body>
+  <div class="bg-layer" aria-hidden="true">
+    <span class="bg-wash bg-wash-a"></span>
+    <span class="bg-wash bg-wash-b"></span>
+    <span class="bg-wash bg-wash-c"></span>
+    <span class="orb orb-a"></span>
+    <span class="orb orb-b"></span>
+    <span class="orb orb-c"></span>
+    <span class="orb orb-d"></span>
+    <span class="bubble bubble-a"></span>
+    <span class="bubble bubble-b"></span>
+    <span class="bubble bubble-c"></span>
+  </div>
+
+  <div class="page-shell">
+    <header class="topbar glass-panel">
+      <div class="brand">
+        <img src="logo.png" alt="UNSTOPPABLE Logo" class="brand-logo">
+        <div class="brand-copy">
+          <h1>UNSTOPPABLE</h1>
+          <p>一刻不停，創意不斷</p>
+        </div>
+      </div>
+
+      <nav class="nav-pill" aria-label="主導覽">
+        <a class="nav-item active" href="./index.html" aria-current="page">
+          <span class="material-symbols-rounded" aria-hidden="true">home</span>
+          <span>首頁</span>
+        </a>
+        <a class="nav-item" href="./tutorial.html">
+          <span class="material-symbols-rounded" aria-hidden="true">auto_stories</span>
+          <span>教學展示</span>
+        </a>
+        <a class="nav-item" href="#toolboxSection">
+          <span class="material-symbols-rounded" aria-hidden="true">widgets</span>
+          <span>工具箱</span>
+        </a>
+        <a class="nav-item" href="#usageSection">
+          <span class="material-symbols-rounded" aria-hidden="true">info</span>
+          <span>使用方法</span>
+        </a>
+      </nav>
+
+    </header>
+
+    <main class="dashboard-shell">
+      <section class="studio-panel glass-panel">
+        <div class="section-intro">
+          <h2>影像實驗室</h2>
+          <p>上傳、處理與預覽你的作品</p>
+        </div>
+
+        <div class="upload-deck">
+          <article class="upload-card upload-card-primary glass-subpanel">
+            <div class="upload-card-title">
+              <div class="upload-icon">
+                <span class="material-symbols-rounded" aria-hidden="true">upload</span>
+              </div>
+              <div>
+                <h3>上傳圖片（A）</h3>
+                <p>拖放或點擊管理選擇</p>
+              </div>
+            </div>
+            <div id="dropZone" class="dropzone" role="button" tabindex="0" aria-label="上傳圖片 A">
+              <span class="dropzone-copy">拖放圖片到這裡，或點擊打開選擇器</span>
+              <span class="material-symbols-rounded dropzone-arrow" aria-hidden="true">chevron_right</span>
+            </div>
+            <input id="fileInputA" type="file" accept="image/*">
+          </article>
+
+          <article class="upload-card glass-subpanel">
+            <div class="upload-card-title">
+              <div class="upload-icon alt">
+                <span class="material-symbols-rounded" aria-hidden="true">image</span>
+              </div>
+              <div>
+                <h3>上傳圖片（B）</h3>
+                <p>用於混合功能</p>
+              </div>
+            </div>
+            <label class="inline-upload" for="fileInputB">
+              <span>選擇第二張圖片作為融合來源</span>
+              <span class="material-symbols-rounded" aria-hidden="true">chevron_right</span>
+            </label>
+            <input id="fileInputB" type="file" accept="image/*">
+          </article>
+
+          <article class="upload-card info-card glass-subpanel">
+            <h3>目前影像資訊</h3>
+            <div id="imageInfoA" class="image-info"></div>
+            <div id="imageInfoB" class="image-info secondary"></div>
+          </article>
+        </div>
+
+        <div class="studio-stage">
+          <aside class="tool-rail glass-subpanel" aria-hidden="true">
+            <button class="rail-btn active" type="button" id="toolBtnPan" data-tool="pan" aria-label="抓取工具 (Pan)">
+              <span class="material-symbols-rounded">open_with</span>
+            </button>
+            <button class="rail-btn" type="button" id="toolBtnProbe" data-tool="probe" aria-label="矩陣探針 (Probe)">
+              <span class="material-symbols-rounded">straighten</span>
+            </button>
+            <button class="rail-btn" type="button" id="toolBtnZoom" data-tool="zoom" aria-label="縮放工具 (Zoom)">
+              <span class="material-symbols-rounded">zoom_in</span>
+            </button>
+          </aside>
+
+          <div class="preview-column">
+            <div class="canvas-shell glass-subpanel">
+              <div class="canvas-shell-head">
+                <div id="statusText" class="status-badge">系統就緒：已載入預設測試圖。</div>
+                <div class="canvas-shell-actions">
+                  <span id="historyBadge" class="history-badge">歷史 0 / 0</span>
+                  <button id="compareViewBtn" class="compare-toggle" type="button" aria-pressed="false">
+                    <span class="material-symbols-rounded" aria-hidden="true">compare</span>
+                    <span>前後對比</span>
+                  </button>
+                  <button id="moreToolsToggle" class="tray-toggle" type="button" aria-expanded="false" aria-controls="secondaryToolsTray">
+                    <span class="material-symbols-rounded" aria-hidden="true">tune</span>
+                    <span>更多操作</span>
+                  </button>
+                </div>
+              </div>
+
+                <div class="canvas-wrap">
+                <div class="live-indicator">
+                  <span class="live-dot" aria-hidden="true"></span>
+                  <span>取樣</span>
+                </div>
+                <div id="loadingBadge" class="loading-badge">處理中...</div>
+                <canvas id="mainCanvas" width="600" height="400" aria-label="主影像畫布"></canvas>
+                <canvas id="mainCanvasOverlay" width="600" height="400" aria-hidden="true"></canvas>
+                <div class="canvas-overlay">
+                  <div class="canvas-readout">
+                    <span>X / Y <strong id="coordText">(300, 200)</strong></span>
+                    <span>RGB <strong id="centerPixelText">(0, 0, 0)</strong></span>
+                  </div>
+                </div>
+                <div id="cannyLongPressOverlay" aria-hidden="true">
+                  <div class="canny-longpress-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                  </div>
+                  <span class="canny-longpress-label">放開看原圖</span>
+                </div>
+              </div>
+
+              <div id="secondaryToolsTray" class="secondary-tools" hidden>
+                <div class="secondary-tools-grid">
+                  <button id="cancelPreviewBtn" type="button">
+                    <span class="material-symbols-rounded" aria-hidden="true">close</span>
+                    <span>取消預覽</span>
+                  </button>
+                  <button id="clearABtn" class="warn" type="button">
+                    <span class="material-symbols-rounded" aria-hidden="true">image_not_supported</span>
+                    <span>清除 A 圖</span>
+                  </button>
+                  <button id="clearBBtn" class="warn" type="button">
+                    <span class="material-symbols-rounded" aria-hidden="true">delete</span>
+                    <span>清除 B 圖</span>
+                  </button>
+                  <button id="loadDemoSakuraBtn" type="button">
+                    <span class="material-symbols-rounded" aria-hidden="true">landscape</span>
+                    <span>載入示範圖</span>
+                  </button>
+                </div>
+                <div class="secondary-export">
+                  <label for="exportMode">匯出模式</label>
+                  <select id="exportMode">
+                    <option value="actual-rgb" selected>實際結果（RGB）</option>
+                    <option value="display">目前顯示</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="primary-actions glass-subpanel">
+              <button id="restoreBtn" class="warn" type="button">
+                <span class="material-symbols-rounded" aria-hidden="true">undo</span>
+                <span>復原原始</span>
+              </button>
+              <button id="undoBtn" type="button" disabled>
+                <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+                <span>往前</span>
+              </button>
+              <button id="redoBtn" type="button" disabled>
+                <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span>
+                <span>往後</span>
+              </button>
+              <button id="exportBtn" class="good" type="button">
+                <span class="material-symbols-rounded" aria-hidden="true">download</span>
+                <span>匯出 PNG</span>
+              </button>
+            </div>
+
+            <div class="support-canvases" aria-hidden="true">
+              <div class="thumb-card">
+                <p>A 圖縮圖</p>
+                <canvas id="previewA" width="180" height="120"></canvas>
+              </div>
+              <div class="thumb-card">
+                <p>B 圖縮圖</p>
+                <canvas id="previewB" width="180" height="120"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="viewer-panel glass-panel">
+        <div class="section-intro">
+          <h2>像素矩陣檢視器</h2>
+          <p>點擊影像後即時取樣，顯示通道矩陣</p>
+        </div>
+
+        <section class="matrix-viewer glass-subpanel">
+          <div class="matrix-control-head">
+            <div>
+              <h3>圖域大小 N = <strong id="sampleSizeValue">10</strong></h3>
+              <p>範圍：3 - 30</p>
+            </div>
+            <span class="sample-hint">拖曳滑桿更新取樣範圍</span>
+          </div>
+          <input id="sampleSize" type="range" min="3" max="30" step="1" value="10">
+
+          <div class="matrix-tabs">
+            <button class="matrix-channel-btn active" data-matrix-channel="r" type="button">R 通道</button>
+            <button class="matrix-channel-btn" data-matrix-channel="g" type="button">G 通道</button>
+            <button class="matrix-channel-btn" data-matrix-channel="b" type="button">B 通道</button>
+          </div>
+          <button id="toggleMatrixBtn" class="visually-hidden" type="button">摺疊矩陣</button>
+
+          <div id="matrixContent" class="matrix-panel-stack">
+            <section class="matrix-tab-panel active" data-matrix-channel="r">
+              <pre id="matrixR" class="mono"></pre>
+            </section>
+            <section class="matrix-tab-panel" data-matrix-channel="g">
+              <pre id="matrixG" class="mono"></pre>
+            </section>
+            <section class="matrix-tab-panel" data-matrix-channel="b">
+              <pre id="matrixB" class="mono"></pre>
+            </section>
+          </div>
+
+          <div class="matrix-summary">
+            <div class="matrix-pill">
+              <span class="matrix-pill-dot" aria-hidden="true"></span>
+              <span>中心像素 RGB: <strong id="centerPixelEcho">(0, 0, 0)</strong></span>
+            </div>
+            <div class="matrix-range">
+              <span>取樣範圍</span>
+              <strong id="matrixRangeText">x: -, y: -</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="display-panel glass-subpanel">
+          <div class="display-panel-head">
+            <div>
+              <h3>通道顯示模式</h3>
+              <p id="modeText">顯示模式：RGB</p>
+            </div>
+            <span class="sample-hint">僅影響顯示，不改變原始資料</span>
+          </div>
+          <div class="channel-buttons">
+            <button class="channel-btn primary" data-mode="rgb" type="button">RGB</button>
+            <button class="channel-btn" data-mode="r" type="button">R</button>
+            <button class="channel-btn" data-mode="g" type="button">G</button>
+            <button class="channel-btn" data-mode="b" type="button">B</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <section id="toolboxSection" class="control-cards">
+      <article class="control-card tone-a">
+        <div class="card-topline">
+          <span class="card-icon"><span class="material-symbols-rounded" aria-hidden="true">tune</span></span>
+          <div>
+            <h3>亮度與對比</h3>
+            <p class="card-subtitle">矩陣加法 &amp; 線性拉伸</p>
+          </div>
+        </div>
+        <div class="math-chip">$I' = (I - 128) \cdot c + 128 + b$</div>
+        <div class="control-row">
+          <label for="brightness">亮度 b</label>
+          <input id="brightness" type="range" min="-100" max="100" step="1" value="0">
+          <strong id="brightnessVal">0</strong>
+        </div>
+        <div class="control-row">
+          <label for="contrast">對比 c</label>
+          <input id="contrast" type="range" min="0.2" max="2.0" step="0.01" value="1">
+          <strong id="contrastVal">1.00</strong>
+        </div>
+        <div id="bcFormula" class="formula">新矩陣 = (原矩陣 - 128) × 1.00 + 128 + (0)</div>
+        <div class="card-actions">
+          <button id="applyBCBtn" class="primary" type="button">套用</button>
+        </div>
+      </article>
+
+      <article class="control-card tone-b">
+        <div class="card-topline">
+          <span class="card-icon"><span class="material-symbols-rounded" aria-hidden="true">blur_on</span></span>
+          <div>
+            <h3>雙圖混合</h3>
+            <p class="card-subtitle">線性組合</p>
+          </div>
+        </div>
+        <div class="math-chip">$\text{Out} = \alpha A + (1 - \alpha)B$</div>
+        <div class="control-row">
+          <label for="blendAlpha">混合比例 α</label>
+          <input id="blendAlpha" type="range" min="0" max="1" step="0.01" value="0.5">
+          <strong id="blendAlphaVal">0.50</strong>
+        </div>
+        <div id="blendFormula" class="formula">Out = 0.50·A + 0.50·B（每通道獨立運算）</div>
+        <div class="card-actions">
+          <button id="applyBlendBtn" class="primary" type="button">套用混合</button>
+        </div>
+      </article>
+
+      <article class="control-card tone-c">
+        <div class="card-topline">
+          <span class="card-icon"><span class="material-symbols-rounded" aria-hidden="true">grid_view</span></span>
+          <div>
+            <h3>馬賽克</h3>
+            <p class="card-subtitle">區塊平均</p>
+          </div>
+        </div>
+        <div class="math-chip">$\text{Block}(x,y) = \text{mean}(\text{RGB})$</div>
+        <div class="control-row">
+          <label for="blockSize">區塊大小</label>
+          <input id="blockSize" type="range" min="2" max="40" step="1" value="10">
+          <strong id="blockSizeVal">10</strong>
+        </div>
+        <div class="formula">每塊取平均 RGB 值，形成像素化效果。</div>
+        <div class="card-actions">
+          <button id="applyMosaicBtn" class="primary" type="button">套用馬賽克</button>
+        </div>
+      </article>
+
+      <article class="control-card tone-d">
+        <div class="card-topline">
+          <span class="card-icon"><span class="material-symbols-rounded" aria-hidden="true">shield_lock</span></span>
+          <div>
+            <h3>隱寫術（LSB）</h3>
+            <p class="card-subtitle">最低有效位元訊息嵌入</p>
+          </div>
+        </div>
+        <div class="dual-actions">
+          <button id="embedBtn" class="primary" type="button">寫入</button>
+          <button id="extractBtn" type="button">讀出</button>
+        </div>
+        <textarea id="stegoMessage" rows="4" placeholder="輸入要藏入圖片的訊息..."></textarea>
+        <p class="capacity-line">容量：<strong id="capacityText"></strong></p>
+        <label for="stegoOutput">讀出結果</label>
+        <output id="stegoOutput" class="mono output-box">（尚未讀取）</output>
+      </article>
+
+      <article class="control-card tone-e">
+        <div class="card-topline">
+          <span class="card-icon"><span class="material-symbols-rounded" aria-hidden="true">branding_watermark</span></span>
+          <div>
+            <h3>水印疊加</h3>
+            <p class="card-subtitle">文字浮水印</p>
+          </div>
+        </div>
+        <div class="math-chip">$I' = (1 - \alpha)I + \alpha W$</div>
+        <div class="control-row tight">
+          <label for="watermarkText">輸入水印文字</label>
+          <input id="watermarkText" type="text" value="關於 UNSTOPPABLE" maxlength="60">
+        </div>
+        <div class="position-picker">
+          <span>位置</span>
+          <div class="position-buttons">
+            <button class="position-btn" data-watermark-pos="top-left" type="button" aria-label="左上">
+              <span class="material-symbols-rounded" aria-hidden="true">north_west</span>
+            </button>
+            <button class="position-btn" data-watermark-pos="top-right" type="button" aria-label="右上">
+              <span class="material-symbols-rounded" aria-hidden="true">north_east</span>
+            </button>
+            <button class="position-btn" data-watermark-pos="bottom-left" type="button" aria-label="左下">
+              <span class="material-symbols-rounded" aria-hidden="true">south_west</span>
+            </button>
+            <button class="position-btn active" data-watermark-pos="bottom-right" type="button" aria-label="右下">
+              <span class="material-symbols-rounded" aria-hidden="true">south_east</span>
+            </button>
+          </div>
+        </div>
+        <div class="control-row">
+          <label for="watermarkAlpha">透明度 α</label>
+          <input id="watermarkAlpha" type="range" min="0.05" max="0.6" step="0.01" value="0.3">
+          <strong id="watermarkAlphaVal">0.30</strong>
+        </div>
+        <select id="watermarkPos" class="visually-hidden">
+          <option value="top-left">左上</option>
+          <option value="top-right">右上</option>
+          <option value="bottom-left">左下</option>
+          <option value="bottom-right" selected>右下</option>
+          <option value="center">置中</option>
+        </select>
+        <div class="card-actions">
+          <button id="applyWatermarkBtn" class="primary" type="button">套用水印</button>
+        </div>
+      </article>
+      <article class="control-card advanced-card advanced-card--fft advanced-card-fft tone-fft">
+        <span class="advanced-badge advanced-badge--fft">ADVANCED</span>
+        <div class="card-topline">
+          <span class="card-icon"><span class="material-symbols-rounded" aria-hidden="true">multiline_chart</span></span>
+          <div>
+            <h3>傅立葉轉換（FFT）</h3>
+            <p class="card-subtitle">頻域分析・濾波處理</p>
+          </div>
+        </div>
+        <div class="math-chip">$$F(u,v) = \sum_{x,y} f(x,y) e^{-j2\pi(ux/M + vy/N)}$$</div>
+
+        <div class="segmented-control" role="tablist" aria-label="FFT 模式">
+          <button class="segment-btn active" data-fft-mode="spectrum" type="button">頻譜</button>
+          <button class="segment-btn" data-fft-mode="lowpass" type="button">低通濾波</button>
+          <button class="segment-btn" data-fft-mode="highpass" type="button">高通濾波</button>
+        </div>
+
+        <div class="control-row">
+          <label for="fftStrength">強度</label>
+          <input id="fftStrength" type="range" min="5" max="100" step="1" value="45">
+          <strong id="fftStrengthVal">45</strong>
+        </div>
+
+        <div class="analysis-preview-grid analysis-preview-grid-two analysis-preview-grid--fft">
+          <figure class="analysis-preview-card analysis-preview-card--source">
+            <figcaption>原圖縮圖</figcaption>
+            <canvas id="fftPreviewSource" width="180" height="120" aria-label="FFT 原圖縮圖"></canvas>
+          </figure>
+          <figure class="analysis-preview-card analysis-preview-card--result">
+            <figcaption>頻譜 / 處理結果</figcaption>
+            <canvas id="fftPreviewResult" width="180" height="120" aria-label="FFT 處理結果縮圖"></canvas>
+          </figure>
+        </div>
+
+        <div class="card-actions">
+          <button id="applyFFTBtn" class="primary" type="button">套用 FFT</button>
+        </div>
+      </article>
+
+      <article class="control-card advanced-card advanced-card--pca advanced-card-pca tone-pca">
+        <span class="advanced-badge advanced-badge--pca">ADVANCED</span>
+        <div class="card-topline">
+          <span class="card-icon"><span class="material-symbols-rounded" aria-hidden="true">data_object</span></span>
+          <div>
+            <h3>主成分分析（PCA）</h3>
+            <p class="card-subtitle">降維壓縮・重建影像</p>
+          </div>
+        </div>
+        <div class="math-chip">$$X \approx U_k \Sigma_k V_k^T$$</div>
+
+        <div class="control-row">
+          <label for="pcaRetention">保留成分</label>
+          <input id="pcaRetention" type="range" min="10" max="95" step="1" value="60">
+          <strong id="pcaRetentionVal">60%</strong>
+        </div>
+
+        <div class="analysis-preview-grid analysis-preview-grid-three analysis-preview-grid--pca">
+          <figure class="analysis-preview-card analysis-preview-card--source">
+            <figcaption>原圖</figcaption>
+            <canvas id="pcaPreviewSource" width="180" height="120" aria-label="PCA 原圖縮圖"></canvas>
+          </figure>
+          <figure class="analysis-preview-card analysis-preview-card--latent">
+            <figcaption>低維表示</figcaption>
+            <canvas id="pcaPreviewLatent" width="180" height="120" aria-label="PCA 中間表示縮圖"></canvas>
+          </figure>
+          <figure class="analysis-preview-card analysis-preview-card--result">
+            <figcaption>重建圖</figcaption>
+            <canvas id="pcaPreviewResult" width="180" height="120" aria-label="PCA 重建圖縮圖"></canvas>
+          </figure>
+        </div>
+
+        <div class="metric-pills">
+          <div class="metric-pill">
+            <span>壓縮比</span>
+            <strong id="pcaCompressionRatio">--</strong>
+          </div>
+          <div class="metric-pill">
+            <span>資訊保留率</span>
+            <strong id="pcaInfoRetention">--</strong>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button id="applyPCABtn" class="primary" type="button">套用 PCA</button>
+        </div>
+      </article>
+
+      <article class="control-card advanced-card advanced-card--filter tone-filter">
+        <div class="advanced-card__head">
+          <div class="card-topline">
+            <span class="card-icon"><span class="material-symbols-rounded" aria-hidden="true">filter_hdr</span></span>
+            <div>
+              <h3>空間域濾鏡</h3>
+              <p class="card-subtitle">卷積核、模糊、銳化與邊緣</p>
+            </div>
+          </div>
+          <span class="advanced-badge advanced-badge--filter">進階</span>
+        </div>
+
+        <div class="advanced-card__meta">
+          <div class="advanced-card__chips">
+            <div class="math-chip">$$I'(x,y) = \sum_{i,j} \text{kernel}(i,j) \cdot I(x+i,\, y+j)$$</div>
+            <span class="metric-chip">3 種卷積模式</span>
+          </div>
+        </div>
+
+        <div class="advanced-card__controls advanced-card__controls--filter">
+          <div class="segmented-control segmented-control--filter" role="tablist" aria-label="空間域濾鏡模式">
+            <button class="segment-btn active" data-filter-mode="gaussian" type="button">高斯模糊</button>
+            <button class="segment-btn" data-filter-mode="sharpen" type="button">銳化</button>
+            <button class="segment-btn" data-filter-mode="edge" type="button">邊緣偵測</button>
+          </div>
+
+          <div class="advanced-card__control-stack">
+            <div class="control-row">
+              <label id="spatialFilterStrengthLabel" for="spatialFilterStrength">卷積核大小</label>
+              <input id="spatialFilterStrength" type="range" min="3" max="9" step="2" value="5">
+              <strong id="spatialFilterStrengthVal">5</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="advanced-card__preview advanced-card__preview--filter">
+          <div class="advanced-card__preview-head">
+            <div>
+              <span class="advanced-card__preview-kicker">預覽面板</span>
+              <strong class="advanced-card__preview-title">原圖與濾鏡結果</strong>
+            </div>
+          </div>
+          <div class="analysis-preview-grid analysis-preview-grid-two spatial-filter-preview">
+            <figure class="analysis-preview-card analysis-preview-card--source">
+              <figcaption>原圖</figcaption>
+              <canvas id="spatialFilterPreviewSource" width="180" height="120" aria-label="空間域濾鏡原圖縮圖"></canvas>
+            </figure>
+            <figure class="analysis-preview-card analysis-preview-card--result">
+              <figcaption>濾鏡結果</figcaption>
+              <canvas id="spatialFilterPreviewResult" width="180" height="120" aria-label="空間域濾鏡結果縮圖"></canvas>
+            </figure>
+          </div>
+          <div class="advanced-card__preview-frame advanced-card__preview-frame--filter">
+            <div id="spatialFilterFormula" class="formula info-caption">Gaussian：以正規化高斯核做平滑，降低高頻細節與雜訊。</div>
+          </div>
+        </div>
+
+        <p class="info-caption advanced-card__caption">
+          依模式切換卷積核與強度，讓控制層和主畫布預覽流程維持同一套操作節奏。
+        </p>
+
+        <div class="card-actions advanced-card__footer">
+          <button id="applySpatialFilterBtn" class="primary" type="button">套用濾鏡</button>
+        </div>
+      </article>
+
+      <article class="control-card advanced-card advanced-card--canny tone-canny">
+        <div class="advanced-card__head">
+          <div class="card-topline">
+            <span class="card-icon"><span class="material-symbols-rounded" aria-hidden="true">polyline</span></span>
+            <div>
+              <h3>Canny 邊緣偵測</h3>
+              <p class="card-subtitle">多步驟輪廓擷取</p>
+            </div>
+          </div>
+          <span class="advanced-badge advanced-badge--canny">進階</span>
+        </div>
+
+        <div class="advanced-card__meta">
+          <div class="advanced-card__chips">
+            <div class="math-chip">$\text{灰階} \xrightarrow{\text{高斯}} \text{Sobel梯度} \xrightarrow{\text{NMS}} \text{雙閾值} \xrightarrow{\text{滯後}} \text{邊緣}$</div>
+            <div class="formula formula--chip">先降噪，再找梯度，最後用雙閾值連接穩定邊緣</div>
+          </div>
+        </div>
+
+        <div class="advanced-card__controls advanced-card__controls--canny">
+          <div class="control-row">
+            <label for="cannyBlur">模糊強度</label>
+            <div class="canny-slider-wrap">
+              <div class="canny-slider-hitarea"></div>
+              <input id="cannyBlur" type="range" min="1" max="5" step="1" value="3">
+              <span class="canny-slider-bubble" id="cannyBlurBubble" aria-live="polite"></span>
+            </div>
+            <strong id="cannyBlurVal">3</strong>
+          </div>
+          <div class="control-row">
+            <label for="cannyLowThreshold">低閾值</label>
+            <div class="canny-slider-wrap">
+              <div class="canny-slider-hitarea"></div>
+              <input id="cannyLowThreshold" type="range" min="10" max="120" step="1" value="42">
+              <span class="canny-slider-bubble" id="cannyLowThresholdBubble" aria-live="polite"></span>
+            </div>
+            <strong id="cannyLowThresholdVal">42</strong>
+          </div>
+          <div class="control-row">
+            <label for="cannyHighThreshold">高閾值</label>
+            <div class="canny-slider-wrap">
+              <div class="canny-slider-hitarea"></div>
+              <input id="cannyHighThreshold" type="range" min="40" max="220" step="1" value="108">
+              <span class="canny-slider-bubble" id="cannyHighThresholdBubble" aria-live="polite"></span>
+            </div>
+            <strong id="cannyHighThresholdVal">108</strong>
+          </div>
+        </div>
+
+        <div class="advanced-card__preview advanced-card__preview--canny">
+          <div class="advanced-card__preview-head">
+            <div>
+              <span class="advanced-card__preview-kicker">預覽輸出</span>
+              <strong class="advanced-card__preview-title">原圖與邊緣結果</strong>
+            </div>
+          </div>
+
+          <div class="metric-pills canny-metrics advanced-card__metrics">
+            <div class="metric-pill">
+              <span>穩定邊緣</span>
+              <strong id="cannyEdgeCount">--</strong>
+            </div>
+            <div class="metric-pill">
+              <span>滯後連接</span>
+              <strong id="cannyWeakLinkCount">--</strong>
+            </div>
+            <div class="metric-pill">
+              <span>邊緣密度</span>
+              <strong id="cannyEdgeDensity">--</strong>
+            </div>
+          </div>
+
+          <div class="analysis-preview-grid analysis-preview-grid-two canny-preview">
+            <figure class="analysis-preview-card analysis-preview-card--source">
+              <figcaption>原圖</figcaption>
+              <canvas id="cannyPreviewSource" width="180" height="120" aria-label="Canny 原圖縮圖"></canvas>
+            </figure>
+            <figure class="analysis-preview-card analysis-preview-card--result">
+              <figcaption>邊緣圖</figcaption>
+              <canvas id="cannyPreviewResult" width="180" height="120" aria-label="Canny 邊緣圖縮圖"></canvas>
+            </figure>
+          </div>
+        </div>
+
+        <p class="canny-note info-caption">
+          Canny 用於找出圖像中的穩定邊緣，比單純 Sobel 更乾淨，常見於文件掃描、醫學影像、工業檢測。
+        </p>
+
+        <div class="card-actions advanced-card__footer">
+          <button id="applyCannyBtn" class="primary" type="button">套用 Canny</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="math-hub glass-panel">
+      <div class="math-hub-head">
+        <h2>數學連結</h2>
+        <p>影像處理背後的矩陣與運算觀念</p>
+      </div>
+      <div class="math-links">
+        <article class="math-item">
+          <h4>圖像 = 矩陣</h4>
+          <p>影像是 H × W × 3 的張量，第三維對應 RGB 通道。</p>
+        </article>
+        <article class="math-item">
+          <h4>像素值</h4>
+          <p>每個通道落在 0 - 255，超出範圍需 clamp 回合法值。</p>
+        </article>
+        <article class="math-item">
+          <h4>線性運算</h4>
+          <p>亮度與對比本質上是平移與縮放的組合。</p>
+        </article>
+        <article class="math-item">
+          <h4>線性組合</h4>
+          <p>混合 = αA + (1-α)B，逐像素逐通道計算。</p>
+        </article>
+        <article class="math-item">
+          <h4>區塊平均</h4>
+          <p>馬賽克類似 mean pooling，主動降低高頻細節。</p>
+        </article>
+        <article class="math-item">
+          <h4>LSB 位元</h4>
+          <p>最低有效位元可藏訊而不易察覺，但容易受壓縮破壞。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="usageSection" class="about-panel glass-panel">
+      <div class="section-intro about-panel__intro">
+        <div>
+          <h2>使用方法</h2>
+          <p>照著這四步操作，就能在首頁完成影像處理與匯出。</p>
+        </div>
+      </div>
+      <div class="about-grid">
+        <article class="about-card glass-subpanel">
+          <h3>第一步：上傳圖片 A</h3>
+          <p>先載入主要圖片，畫布、縮圖與像素資訊會同步更新。</p>
+        </article>
+        <article class="about-card glass-subpanel">
+          <h3>第二步：選擇功能卡並查看預覽</h3>
+          <p>從工具箱挑選功能，先觀察預覽效果，再決定是否套用。</p>
+        </article>
+        <article class="about-card glass-subpanel">
+          <h3>第三步：按「套用」寫入結果</h3>
+          <p>確認預覽符合需求後，將目前效果正式寫入工作畫布。</p>
+        </article>
+        <article class="about-card glass-subpanel">
+          <h3>第四步：匯出 PNG</h3>
+          <p>完成調整後下載 PNG，保留首頁目前處理後的影像結果。</p>
+        </article>
+        <article class="about-card glass-subpanel usage-note-card">
+          <h3>操作提醒</h3>
+          <ul class="usage-note-list">
+            <li>雙圖混合需先上傳圖片 B。</li>
+            <li>LSB 隱寫建議匯出 PNG。</li>
+            <li>教學展示頁只作固定案例展示，不影響首頁狀態。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="aboutSection" class="about-panel glass-panel">
+      <div class="section-intro about-panel__intro">
+        <div>
+          <h2>關於 UNSTOPPABLE</h2>
+          <p>一刻不停，創意不斷的圖像矩陣操作實驗室。</p>
+        </div>
+      </div>
+      <div class="about-grid">
+        <article class="about-card glass-subpanel">
+          <h3>工作方式</h3>
+          <p>首頁會把上傳圖片限制在可控的工作尺寸內，讓混合、LSB、FFT 與 PCA 在瀏覽器裡仍保持流暢。</p>
+        </article>
+        <article class="about-card glass-subpanel">
+          <h3>適合誰用</h3>
+          <p>適合課堂展示、影像處理入門、矩陣概念教學，以及想快速比較不同處理結果的作品實驗。</p>
+        </article>
+        <article class="about-card glass-subpanel">
+          <h3>延伸閱讀</h3>
+          <p>想看每個功能的示範流程與視覺化說明，可以前往 <a href="./tutorial.html">教學展示頁</a>。</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="page-foot">頁尾</footer>
+  </div>
+
+  <div id="compareModal" class="compare-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="compareModalTitle">
+    <div id="compareModalBackdrop" class="compare-modal__backdrop"></div>
+    <div class="compare-modal__dialog glass-panel">
+      <div class="compare-modal__header">
+        <div class="compare-modal__title-wrap">
+          <p class="compare-modal__eyebrow">Compare View</p>
+          <h3 id="compareModalTitle">前後對比</h3>
+          <p class="compare-modal__subtitle">比較套用前與目前結果</p>
+        </div>
+        <button id="compareModalClose" class="compare-modal__close" type="button" aria-label="關閉前後對比">
+          <span class="material-symbols-rounded" aria-hidden="true">close</span>
+        </button>
+      </div>
+
+      <div class="compare-modal__body">
+        <div class="compare-modal__side compare-modal__side--before">
+          <div class="compare-modal__panel-head">
+            <div>
+              <p class="compare-modal__panel-tag">BEFORE</p>
+              <strong id="compareBeforeLabel" class="compare-modal__panel-source">套用前</strong>
+            </div>
+          </div>
+          <div class="compare-modal__canvas-wrap">
+            <canvas id="compareBeforeCanvas" class="compare-modal__canvas" width="720" height="480" aria-label="前後對比 BEFORE 畫布"></canvas>
+          </div>
+          <div class="compare-modal__rgb">
+            <span>中心 RGB</span>
+            <strong id="compareBeforeRgb">(-, -, -)</strong>
+          </div>
+          <div class="compare-modal__matrix-grid">
+            <article class="compare-modal__matrix compare-modal__matrix--r">
+              <header>R Matrix</header>
+              <pre id="compareBeforeMatrixR" class="mono"></pre>
+            </article>
+            <article class="compare-modal__matrix compare-modal__matrix--g">
+              <header>G Matrix</header>
+              <pre id="compareBeforeMatrixG" class="mono"></pre>
+            </article>
+            <article class="compare-modal__matrix compare-modal__matrix--b">
+              <header>B Matrix</header>
+              <pre id="compareBeforeMatrixB" class="mono"></pre>
+            </article>
+          </div>
+        </div>
+
+        <div id="mathEvolutionBridge" class="math-bridge">
+          <div class="math-bridge__flow" aria-hidden="true">
+            <div class="flow-dot flow-dot--top"></div>
+            <div class="flow-line"></div>
+            <div class="flow-dot flow-dot--center"></div>
+            <div class="flow-line"></div>
+            <div class="flow-dot flow-dot--bottom"></div>
+          </div>
+          <div id="mathBridgeContent" class="math-bridge__content"></div>
+        </div>
+
+        <div class="compare-modal__side compare-modal__side--after">
+          <div class="compare-modal__panel-head">
+            <div>
+              <p class="compare-modal__panel-tag">AFTER</p>
+              <strong id="compareAfterLabel" class="compare-modal__panel-source">目前結果</strong>
+            </div>
+          </div>
+          <div class="compare-modal__canvas-wrap">
+            <canvas id="compareAfterCanvas" class="compare-modal__canvas" width="720" height="480" aria-label="前後對比 AFTER 畫布"></canvas>
+          </div>
+          <div class="compare-modal__rgb">
+            <span>中心 RGB</span>
+            <strong id="compareAfterRgb">(-, -, -)</strong>
+          </div>
+          <div class="compare-modal__matrix-grid">
+            <article class="compare-modal__matrix compare-modal__matrix--r">
+              <header>R Matrix</header>
+              <pre id="compareAfterMatrixR" class="mono"></pre>
+            </article>
+            <article class="compare-modal__matrix compare-modal__matrix--g">
+              <header>G Matrix</header>
+              <pre id="compareAfterMatrixG" class="mono"></pre>
+            </article>
+            <article class="compare-modal__matrix compare-modal__matrix--b">
+              <header>B Matrix</header>
+              <pre id="compareAfterMatrixB" class="mono"></pre>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-modal__footer">
+        <div class="compare-modal__info-pill">
+          <span>目前取樣點</span>
+          <strong id="compareModalPointText">(-, -)</strong>
+        </div>
+        <div class="compare-modal__info-pill">
+          <span>Sample size</span>
+          <strong id="compareModalSampleText">N = 10</strong>
+        </div>
+      </div>
+    </div>
+  <div id="toastHost" class="toast-host" aria-live="polite" aria-relevant="additions"></div>
+
+  <script src="./fuji-demo-data.js"></script>
+  <script src="./pixel-wizard.js"></script>
+</body>
+</html>
